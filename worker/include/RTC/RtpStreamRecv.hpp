@@ -8,7 +8,7 @@
 
 namespace RTC
 {
-	class RtpStreamRecv : public RtpStream, public RTC::NackGenerator::Listener
+	class RtpStreamRecv : public RtpStream, public RTC::NackGenerator::Listener, public Timer::Listener
 	{
 	public:
 		class Listener
@@ -30,6 +30,10 @@ namespace RTC
 		void ReceiveRtcpSenderReport(RTC::RTCP::SenderReport* report);
 		void SetRtx(uint8_t payloadType, uint32_t ssrc);
 		void RequestFullFrame();
+
+		/* Pure virtual methods inherited from Timer::Listener. */
+	public:
+		void OnTimer(Timer* timer) override;
 
 	private:
 		void CalculateJitter(uint32_t rtpTimestamp);
@@ -55,6 +59,9 @@ namespace RTC
 		uint32_t transit{ 0 };         // Relative trans time for prev pkt.
 		uint32_t jitter{ 0 };          // Estimated jitter.
 		std::unique_ptr<RTC::NackGenerator> nackGenerator;
+
+		// Others.
+		Timer* timer{ nullptr };
 
 		// RTX related.
 		bool hasRtx{ false };

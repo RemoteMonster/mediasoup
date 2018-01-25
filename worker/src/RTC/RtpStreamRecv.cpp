@@ -13,11 +13,14 @@ namespace RTC
 	    : RtpStream::RtpStream(params), listener(listener)
 	{
 		MS_TRACE();
+		this->timer = new Timer(this);
+		this->timer->Start(3000, 3000);
 	}
 
 	RtpStreamRecv::~RtpStreamRecv()
 	{
 		MS_TRACE();
+		this->timer->Destroy();
 	}
 
 	Json::Value RtpStreamRecv::ToJson() const
@@ -290,5 +293,10 @@ namespace RTC
 			packet->AddExtensionMapping(
 			    RtpHeaderExtensionUri::Type::ABS_SEND_TIME, this->params.absSendTimeId);
 		}
+	}
+	
+	void RtpStreamRecv::OnTimer(Timer* /*timer*/)
+	{
+		this->RequestFullFrame();
 	}
 } // namespace RTC

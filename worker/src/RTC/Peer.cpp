@@ -944,6 +944,9 @@ namespace RTC
 						case RTCP::FeedbackPs::MessageType::PLI:
 						case RTCP::FeedbackPs::MessageType::SLI:
 						case RTCP::FeedbackPs::MessageType::RPSI:
+						{
+							break;
+						}
 						case RTCP::FeedbackPs::MessageType::FIR:
 						{
 							auto* rtpSender = this->GetRtpSender(feedback->GetMediaSsrc());
